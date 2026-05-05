@@ -38,7 +38,7 @@ function World() {
   );
 }
 
-function TopBar({ level, totalLevels }) {
+function TopBar({ level, totalLevels, gameState }) {
   const [time, setTime] = useState(new Date());
   useEffect(() => {
     const t = setInterval(() => setTime(new Date()), 1000);
@@ -46,16 +46,47 @@ function TopBar({ level, totalLevels }) {
   }, []);
   const fmt = (n) => String(n).padStart(2, '0');
   const stamp = `${fmt(time.getHours())}:${fmt(time.getMinutes())}:${fmt(time.getSeconds())}`;
+  const heat = gameState?.heat ?? 0;
+  const trace = gameState?.trace ?? 0;
+  const integrity = gameState?.integrity ?? 100;
+  const fragments = gameState?.accessFragments || [];
   return (
     <div className="topbar">
-      <div className="left">
-        <span className="dot" />
-        Канал <b style={{color: 'var(--neon-green)'}}>СТАБИЛЕН</b> · УЗЕЛ 7Е-22 · 480 Тб/с
+      <div className="topbar-main">
+        <div className="left">
+          <span className="dot" />
+          Канал <b style={{color: 'var(--neon-green)'}}>СТАБИЛЕН</b> · Node 7E-22 · 480 Тб/с
+        </div>
+        <div className="center">НЕТРАННЕР · ЭХО ИНФОРМАЦИИ</div>
+        <div className="right">
+          ОП {fmt(level || 0)}/{fmt(totalLevels || 4)} · ICE {heat > 70 ? 'BURN' : heat > 40 ? 'HEAT' : 'ФОНОВЫЙ'} · {stamp}
+        </div>
       </div>
-      <div className="center">НЕТРАННЕР · ЭХО ИНФОРМАЦИИ</div>
-      <div className="right">
-        ОП {fmt(level || 0)}/{fmt(totalLevels || 3)} · ICE {level >= 3 ? 'КРИТИЧ.' : level >= 2 ? 'ПОВЫШЕН' : 'ФОНОВЫЙ'} · {stamp}
+      <div className="run-hud">
+        <HudMeter label="ICE Heat" value={heat} color="pink" />
+        <HudMeter label="Trace" value={trace} color="warn" />
+        <HudMeter label="Integrity" value={integrity} color="green" invert />
+        <div className="hud-box fragments">
+          <span>Access Fragments</span>
+          <b>{fragments.length ? fragments.join(' / ') : '—'}</b>
+        </div>
+        <div className="hud-box checkpoint">
+          <span>Checkpoint</span>
+          <b>{gameState?.checkpoint || 'BOOT'}</b>
+        </div>
       </div>
+    </div>
+  );
+}
+
+function HudMeter({ label, value, color, invert }) {
+  const tone = color === 'pink' ? 'var(--neon-pink)' : color === 'green' ? 'var(--neon-green)' : 'var(--neon-yellow)';
+  const danger = invert ? value < 35 : value > 70;
+  return (
+    <div className={`hud-box ${danger ? 'danger' : ''}`}>
+      <span>{label}</span>
+      <b style={{ color: danger ? 'var(--neon-red)' : tone }}>{Math.round(value)}</b>
+      <div className="hud-track"><i style={{ width: `${Math.max(0, Math.min(100, value))}%`, background: danger ? 'var(--neon-red)' : tone }} /></div>
     </div>
   );
 }
@@ -70,13 +101,15 @@ function StatusBar({ children }) {
   );
 }
 
-function NavRail({ screen, setScreen, completed }) {
+function NavRail({ screen, setScreen, completed, gameState }) {
+  const fragments = gameState?.accessFragments || [];
+  const finalOpen = ['BIT', 'ENTROPY', 'MUTUAL', 'CIPHER'].every(f => fragments.includes(f));
   const items = [
     { id: 'menu', label: 'M' },
     { id: 'l1',   label: '1' },
     { id: 'l2',   label: '2' },
     { id: 'l3',   label: '3' },
-    { id: 'finale', label: '★' },
+    { id: 'finale', label: '◆', locked: !finalOpen },
   ];
   return (
     <div className="nav">
@@ -84,8 +117,9 @@ function NavRail({ screen, setScreen, completed }) {
         <button
           key={it.id}
           className={screen === it.id ? 'active' : ''}
-          onClick={() => setScreen(it.id)}
-          title={it.id}
+          onClick={() => !it.locked && setScreen(it.id)}
+          title={it.locked ? 'Obsidian Core locked' : it.id}
+          disabled={it.locked}
         >
           {it.label}
           {completed[it.id] ? <span style={{

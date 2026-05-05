@@ -46,8 +46,8 @@ function EDEVisualizer({ active, k1Hex, k2Hex, k3Hex, blocks }) {
   );
 }
 
-function Level3({ onComplete }) {
-  const [tab, setTab] = useState('main');
+function Level3({ onComplete, gameState, gameActions }) {
+  const [tab, setTab] = useState('assembly');
   const [plain, setPlain] = useState('собор горит в полночь. принеси чип.');
   const [keyInput, setKeyInput] = useState('netrunner-v0id-shadow-key');
   const [iv, setIv] = useState('1337c0de');
@@ -219,12 +219,16 @@ function Level3({ onComplete }) {
         Чистый JS-3DES (без крипто-библиотек). 64-битные блоки, PKCS#7-набивка, режимы ECB и CBC,
         шифрование файлов и пошаговый показ расписания E-D-E.
       </p>
+      <StoryPanel cue="l3" />
 
       <div className="tabs mt-6">
-        <button className={`tab ${tab==='main'?'active':''}`} onClick={() => setTab('main')}>I · Шифроядро</button>
-        <button className={`tab ${tab==='file'?'active':''}`} onClick={() => setTab('file')}>II · Сброс файла</button>
-        <button className={`tab ${tab==='brute'?'active':''}`} onClick={() => setTab('brute')}>III · Перебор ключа</button>
+        <button className={`tab ${tab==='assembly'?'active':''}`} onClick={() => setTab('assembly')}>I · Cipher Tunnel</button>
+        <button className={`tab ${tab==='main'?'active':''}`} onClick={() => setTab('main')}>II · Шифроядро</button>
+        <button className={`tab ${tab==='file'?'active':''}`} onClick={() => setTab('file')}>III · Сброс файла</button>
+        <button className={`tab ${tab==='brute'?'active':''}`} onClick={() => setTab('brute')}>IV · Перебор ключа</button>
       </div>
+
+      {tab === 'assembly' && <ProtocolAssemblyPuzzle gameState={gameState} gameActions={gameActions} />}
 
       {tab === 'main' && (
         <div className="row" style={{gap: 24, alignItems: 'flex-start'}}>
@@ -398,9 +402,9 @@ function Level3({ onComplete }) {
 
       <div className="row mt-6" style={{justifyContent:'space-between', borderTop:'1px solid rgba(57,255,122,0.15)', paddingTop: 24}}>
         <div className="mono dim" style={{fontSize: 11}}>
-          реализация: чистый JS · без крипто-библиотек · 16 раундов × 3 прохода · PKCS#7 · ECB/CBC
+          {gameState.accessFragments.includes('CIPHER') ? 'Access Fragment cached :: CIPHER' : 'Cipher Tunnel Assembly ждёт безопасную сборку'}
         </div>
-        <button className="btn pink" onClick={onComplete}>▸ отметить ОП-03 выполненным</button>
+        <button className="btn pink" onClick={onComplete} disabled={!gameState.accessFragments.includes('CIPHER')}>▸ seal OP-03 checkpoint</button>
       </div>
     </div>
   );

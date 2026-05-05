@@ -374,15 +374,18 @@ function Essay() {
   );
 }
 
-function Level1({ onComplete }) {
+function Level1({ onComplete, gameState, gameActions }) {
   const tabs = [
-    { id: 'triage', label: 'I · Сортировка сигналов' },
-    { id: 'lab',    label: 'II · Лаборатория энтропии' },
-    { id: 'comp',   label: 'III · Сжатие' },
-    { id: 'essay',  label: 'IV · Разбор' },
+    { id: 'signal', label: 'I · Signal Value' },
+    { id: 'entropyLock', label: 'II · Entropy Lock' },
+    { id: 'triage', label: 'III · Сортировка' },
+    { id: 'lab',    label: 'IV · Энтропия Lab' },
+    { id: 'comp',   label: 'V · Сжатие' },
+    { id: 'essay',  label: 'VI · Разбор' },
   ];
-  const [tab, setTab] = useState('triage');
+  const [tab, setTab] = useState('signal');
   const [score, setScore] = useState({ done: false, n: 0, of: 0 });
+  const l1Ready = gameState.accessFragments.includes('BIT') && gameState.accessFragments.includes('ENTROPY');
   return (
     <div className="fade-in" style={{padding: '32px 64px 64px', maxWidth: 1280, margin: '0 auto'}}>
       <div className="row mb-2" style={{justifyContent:'space-between'}}>
@@ -393,8 +396,9 @@ function Level1({ onComplete }) {
         <span className="chip">КОЛИЧЕСТВО ИНФОРМАЦИИ</span>
       </div>
       <p className="body dim" style={{maxWidth: 720}}>
-        Три тренажёра + письменный разбор. Колыбель учит сначала чувствовать, потом считать <i>вес</i> сигнала.
+        Сначала crack-пазлы с последствиями, потом старые тренажёры и эссе. Колыбель учит чувствовать, а затем считать вес сигнала.
       </p>
+      <StoryPanel cue="l1" />
 
       <div className="tabs mt-6">
         {tabs.map(t => (
@@ -404,6 +408,8 @@ function Level1({ onComplete }) {
         ))}
       </div>
 
+      {tab === 'signal' && <SignalValuePuzzle gameState={gameState} gameActions={gameActions} />}
+      {tab === 'entropyLock' && <EntropyLock gameState={gameState} gameActions={gameActions} />}
       {tab === 'triage' && (
         <SignalTriage onScore={(n, of) => {
           setScore({ done: true, n, of });
@@ -416,9 +422,9 @@ function Level1({ onComplete }) {
 
       <div className="row mt-6" style={{justifyContent:'space-between', borderTop:'1px solid rgba(5,217,255,0.12)', paddingTop: 24}}>
         <div className="mono dim" style={{fontSize: 11}}>
-          {score.done ? `сортировка пройдена :: ${score.n}/${score.of}` : 'сортировка ...... ожидание'}
+          {l1Ready ? 'Access Fragments cached :: BIT / ENTROPY' : score.done ? `legacy sorting :: ${score.n}/${score.of}` : 'signal gate ...... ожидание'}
         </div>
-        <button className="btn pink" onClick={onComplete}>▸ отметить ОП-01 выполненным</button>
+        <button className="btn pink" onClick={onComplete} disabled={!l1Ready}>▸ seal OP-01 checkpoint</button>
       </div>
     </div>
   );

@@ -2,14 +2,14 @@
    Главное меню + финал + брифинги уровней
    ============================================================ */
 
-function MainMenu({ setScreen, completed }) {
+function MainMenu({ setScreen, completed, gameState, gameActions }) {
   const ops = [
     { id: 'l1', code: 'ОП-01', name: 'Колыбель Шеннона', sub: 'Количество информации', color: 'cyan',
-      brief: 'Первое погружение. Учись взвешивать сигналы — чувствовать, какие биты по-настоящему сжимают неизвестность.'},
+      brief: 'Signal Value и Entropy Lock. Учись выбирать биты, которые реально режут неизвестность, а не просто шумят.'},
     { id: 'l2', code: 'ОП-02', name: 'Решётка взаимности', sub: 'Анализ совместных вероятностей', color: 'pink',
-      brief: 'Живой калькулятор, врезанный в дата-этаж. Подай ему совместную матрицу — и наблюдай, как из неё течёт зависимость.'},
+      brief: 'Matrix Breach поверх live-калькулятора. Собери P(X,Y), где связь сильная, но не палится слишком очевидно.'},
     { id: 'l3', code: 'ОП-03', name: 'Лом Чёрного Льда', sub: '3DES — шифрование / дешифрование / взлом', color: 'green',
-      brief: 'Тройной шифр. Расписание EDE. Ключ от хранилища куётся в три прохода.'},
+      brief: 'Cipher Tunnel Assembly, а рядом старое шифроядро: EDE, CBC, IV, файлы и brute-force demo.'},
   ];
   return (
     <div className="fade-in" style={{padding: '40px 64px 64px', maxWidth: 1280, margin: '0 auto'}}>
@@ -20,11 +20,12 @@ function MainMenu({ setScreen, completed }) {
         <span style={{color:'var(--neon-pink)', textShadow:'0 0 24px rgba(255,42,109,0.6)'}}>ИНФОРМАЦИИ</span>
       </h1>
       <div className="row fade-in d2" style={{marginTop: 12, marginBottom: 28}}>
-        <span className="chip">НЕТРАННЕР · V0ID</span>
+        <span className="chip">НЕТРАННЕР · {window.HERO_NAME || 'Rook'}</span>
         <span className="chip pink">ЦЕЛЬ · KRONOS SYSCORP</span>
         <span className="chip green">ГОРОД · НЕОН-ХАРБОР</span>
-        <span className="chip warn">ДОПУСК · УРОВЕНЬ-Δ</span>
+        <span className="chip warn">DIFFICULTY · {gameState.difficulty.toUpperCase()}</span>
       </div>
+      <StoryPanel cue="boot" />
 
       <div className="brackets panel fade-in d3" style={{maxWidth: 760, marginBottom: 32}}>
         <span className="br-tr" /><span className="br-bl" />
@@ -58,29 +59,32 @@ function MainMenu({ setScreen, completed }) {
           </div>
         ))}
       </div>
+      <div className="row mt-6">
+        <button className="btn ghost" onClick={() => gameActions.fullReset()}>Reset Run</button>
+        <button className="btn ghost" onClick={() => setScreen(gameActions.restoreCheckpoint())}>Restore Checkpoint</button>
+      </div>
     </div>
   );
 }
 
-function Finale({ completed, setScreen }) {
+function Finale({ completed, setScreen, gameState, gameActions }) {
   const allDone = completed.l1 && completed.l2 && completed.l3;
-  const today = new Date().toISOString().slice(0, 10);
   return (
     <div className="fade-in" style={{padding: '40px 64px 64px', maxWidth: 1100, margin: '0 auto'}}>
-      <div className="kicker">// эвакуация · последняя трансляция</div>
+      <div className="kicker">// Obsidian Core · финальная трансляция</div>
       <h1 className="title-xl" style={{marginTop: 12, marginBottom: 24}}>
         {allDone ? (
-          <><span style={{color:'var(--neon-green)'}}>ВЫХОД</span> ИЗ СЕТИ</>
+          <><span style={{color:'var(--neon-green)'}}>OBSIDIAN</span> BREACH</>
         ) : (
           <><span style={{color:'var(--neon-yellow)'}}>ОЖИ</span>ДАНИЕ</>
         )}
       </h1>
 
       {!allDone ? (
-        <div className="panel" style={{maxWidth: 720}}>
-          <div className="panel-title">// статус <div className="bar"/></div>
-          <p className="body">
-            Три замка. Три ключа. Хранилище не открывается за неполный набор.
+          <div className="panel" style={{maxWidth: 720}}>
+            <div className="panel-title">// статус <div className="bar"/></div>
+            <p className="body">
+            Три операции должны быть sealed как checkpoints. Но Core также смотрит на Access Fragments: BIT, ENTROPY, MUTUAL, CIPHER.
           </p>
           <ul className="body mono" style={{fontSize: 13, lineHeight: 2, listStyle: 'none', padding: 0}}>
             <li>{completed.l1 ? '✓ ' : '☐ '} ОП-01 :: Колыбель Шеннона</li>
@@ -92,57 +96,7 @@ function Finale({ completed, setScreen }) {
           </div>
         </div>
       ) : (
-        <>
-          <div className="brackets panel pink" style={{maxWidth: 880, marginBottom: 24}}>
-            <span className="br-tr" /><span className="br-bl"/>
-            <div className="panel-title">// сертификат нетраннера <div className="bar"/></div>
-            <div style={{textAlign: 'center', padding: '20px 8px'}}>
-              <div className="kicker" style={{color: 'var(--ink-dim)'}}>сертификат безопасной экстракции</div>
-              <div className="title-lg" style={{marginTop: 12, color: 'var(--neon-pink)'}}>V0ID</div>
-              <div className="body dim" style={{marginTop: 8}}>
-                расшифровал Ключ Информации и вышел из дата-этажа Kronos Syscorp,<br/>
-                заметно облегчив их резервуар энтропии.
-              </div>
-              <div className="row" style={{justifyContent:'center', marginTop: 24, gap: 32}}>
-                <div>
-                  <div className="kicker">ШЕННОН</div>
-                  <div className="title-md" style={{color: 'var(--neon-cyan)'}}>ВЫПОЛНЕНО</div>
-                </div>
-                <div>
-                  <div className="kicker">ВЗАИМНАЯ</div>
-                  <div className="title-md" style={{color: 'var(--neon-pink)'}}>ВЫПОЛНЕНО</div>
-                </div>
-                <div>
-                  <div className="kicker">3DES</div>
-                  <div className="title-md" style={{color: 'var(--neon-green)'}}>ВЫПОЛНЕНО</div>
-                </div>
-              </div>
-              <div className="mono dim" style={{marginTop: 24, fontSize: 11, letterSpacing: '0.2em'}}>
-                ВЫДАН {today.replace(/-/g, '.')} · НЕОН-ХАРБОР · KRONOS SYSCORP ВСЁ ОТРИЦАЕТ
-              </div>
-            </div>
-          </div>
-
-          <div className="panel">
-            <div className="panel-title">// разбор полётов <div className="bar"/></div>
-            <p className="body">
-              Ты начал заход с подозрением, что информация — это чувство, что одни сообщения
-              просто <i>тяжелее</i> других. Уходишь — с математикой: <span className="mono" style={{color:'var(--neon-cyan)'}}>H(X) = −Σp·log₂p</span>{' '}
-              — точный вес неожиданности. <span className="mono" style={{color:'var(--neon-pink)'}}>I(X;Y) = H(X) + H(Y) − H(X,Y)</span> — то,
-              как плотно две системы шепчутся друг с другом. <span className="mono" style={{color:'var(--neon-green)'}}>3DES = E·D·E</span>{' '}
-              — то, во что заворачивают тайну, когда нельзя доверять проводам.
-            </p>
-            <p className="body dim">
-              Сжатие. Канальное кодирование. Криптография. Машинное обучение. Любая современная
-              система — это борьба с одним и тем же врагом: с энтропией, которой ты не управляешь.
-            </p>
-          </div>
-
-          <div className="row mt-6">
-            <button className="btn pink" onClick={() => setScreen('menu')}>◂ пройти ещё раз</button>
-            <button className="btn ghost" onClick={() => window.print()}>⎙ распечатать сертификат</button>
-          </div>
-        </>
+        <FinalBreachSequence gameState={gameState} gameActions={gameActions} setScreen={setScreen} />
       )}
     </div>
   );

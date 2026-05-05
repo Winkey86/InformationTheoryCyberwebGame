@@ -6,6 +6,69 @@
 2. Средство расчета полной взаимной информации по матрице совместных вероятностей.
 3. Реализация протокола шифрования и дешифрования 3DES.
 
+## Версия 2: обучающая cyberpunk-головоломка
+
+Во второй итерации проект усилен как полноценный netrun: появились игровые последствия, checkpoint/rollback, выбор сложности, Story Panels с монологом героя и puzzle-gated финал `Obsidian Breach`.
+
+Главная идея осталась прежней: проект закрывает три задания БДЗ. Новая игровая оболочка делает прохождение глубже: правильные решения дают `Access Fragments`, ошибки поднимают `ICE Heat` и `Trace`, критические промахи режут `Integrity`, а поражение переводит игрока на экран `ICE TRACE COMPLETE` с возвратом к последнему checkpoint.
+
+### Глобальное состояние run
+
+Состояние хранится в `localStorage` и включает:
+
+- `ICE Heat` - насколько сильно разогрет защитный контур.
+- `Trace` - близость BurnICE к физическому каналу.
+- `Integrity` - запас нейрошунта.
+- `Access Fragments` - ключевые фрагменты `BIT`, `ENTROPY`, `MUTUAL`, `CIPHER`.
+- `Checkpoint` - точка rollback после крупной операции.
+- `failCount` - количество откатов.
+- `terminalLog` - журнал событий run.
+
+В интерфейсе добавлены кнопки `Reset Run` и `Restore Checkpoint`. При `heat >= 100`, `trace >= 100` или `integrity <= 0` показывается defeat screen:
+
+```text
+ICE TRACE COMPLETE
+Connection burned.
+Rollback to last checkpoint?
+```
+
+### Сложность
+
+- `Normal`: больше подсказок, мягче штрафы, таймеры длиннее.
+- `Hardline`: меньше подсказок, выше штрафы, таймеры короче; финальная ошибка откатывает глубже.
+
+### Story Panels
+
+Добавлены сюжетные плашки героя `Rook`: портрет, имя, короткий монолог и статус `Calm / Nervous / Overheated / Focused / Breach Mode`. Плашки появляются после boot, перед миссиями, при ошибках, перегреве, rollback, поражении и успехе.
+
+Чтобы вставить портрет героя, положите файл:
+
+```text
+assets/hero-portrait.png
+```
+
+Если файла нет, интерфейс показывает встроенный neon-placeholder и не ломается.
+
+### Новые puzzle-механики
+
+- `Signal Value Puzzle`: выбор лучшего сигнала по вероятности, количеству информации, intercept cost и ICE risk. Успех даёт `BIT`.
+- `Entropy Lock`: три настройки распределения вероятностей с live `H(X)`, `Hmax`, `H/Hmax` и таймером. Успех даёт `ENTROPY`.
+- `Matrix Breach`: три gated-матрицы `P(X,Y)` поверх старого калькулятора взаимной информации. Успех даёт `MUTUAL`.
+- `Cipher Tunnel Assembly`: выбор параметров 3DES-туннеля: `CBC`, `random IV`, `EDE`, `PKCS#7`, сильный 24-byte key. Успех даёт `CIPHER`.
+- `Obsidian Breach`: финальная последовательность, открывается только после всех четырёх fragments и объединяет темы количества информации, энтропии, взаимной информации и 3DES.
+
+### Сценарий демо
+
+1. Boot sequence.
+2. Выбор сложности `Normal` или `Hardline`.
+3. `Signal Value Puzzle` - получить `BIT`.
+4. `Entropy Lock` - получить `ENTROPY`.
+5. `Matrix Breach` - получить `MUTUAL`.
+6. `Cipher Tunnel Assembly` - получить `CIPHER`.
+7. Показать поражение: несколько раз неверно проверить `Entropy Lock`, дождаться `ICE TRACE COMPLETE`, нажать `Restore from checkpoint`.
+8. Финальный `Obsidian Breach`.
+9. Расширенный сертификат `BREACH COMPLETE`.
+
 ## Запуск
 
 Проект не требует сборки. Достаточно отдать папку через любой статический HTTP-сервер:
@@ -27,6 +90,13 @@ http://127.0.0.1:8100/Netrunner.html
 
 - `Netrunner.html` - точка входа, подключает CSS, математические модули, 3DES и React-компоненты.
 - `styles.css` - визуальная система, анимации, панели, таблицы, терминал, навигация.
+- `game-state.js` - глобальное состояние run, сохранение в `localStorage`, penalties, rollback, defeat screen.
+- `story-panels.jsx` - Story Panels / Hero Monologue и fallback-портрет.
+- `puzzles-signal.jsx` - `Signal Value Puzzle`.
+- `puzzles-entropy.jsx` - `Entropy Lock`.
+- `puzzles-matrix.jsx` - `Matrix Breach`.
+- `puzzles-cipher.jsx` - `Cipher Tunnel Assembly`.
+- `final-breach.jsx` - финальный `Obsidian Breach` и расширенный сертификат.
 - `shell.jsx` - общий интерфейс: фон, верхняя панель, нижний статус, боковая навигация, boot sequence.
 - `menu.jsx` - главное меню, карточки операций, финальный экран и сертификат прохождения.
 - `level1.jsx` - уровень про количество информации и творческое эссе.
@@ -34,6 +104,7 @@ http://127.0.0.1:8100/Netrunner.html
 - `level3.jsx` - интерфейс 3DES: текст, файлы, визуализация EDE, демонстрация сложности перебора.
 - `info-theory.js` - чистые функции энтропии, маргинальных распределений, нормализации и взаимной информации.
 - `tdes.js` - собственная реализация DES/3DES на чистом JavaScript.
+- `assets/` - место для пользовательского портрета героя.
 - `uploads/` - копии исходных файлов задания и рекомендаций.
 
 ## Общая игровая оболочка
@@ -281,3 +352,8 @@ I(X;Y) = H(X) + H(Y) - H(X,Y)
 - В уровне 3 добавлена полноценная расшифровка `.3des` файлов и скачивание восстановленного исходного файла.
 - В `tdes.js` добавлен байтовый API `decryptBytes`, чтобы файловая расшифровка не зависела от UTF-8-декодирования.
 - Добавлен этот README с подробным описанием механик и фактическим статусом соответствия ТЗ.
+
+
+
+  cd /Users/il/Develop/MyProjects/InformationTheoryBDZ/DesignTest
+  python3 -m http.server 8100 --bind 127.0.0.1

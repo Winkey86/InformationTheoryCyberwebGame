@@ -184,8 +184,9 @@ function MarginalsBar({ probs, color }) {
   );
 }
 
-function Level2({ onComplete }) {
+function Level2({ onComplete, gameState, gameActions }) {
   const [presetId, setPresetId] = useState('weak');
+  const [mode, setMode] = useState('breach');
   const preset = PRESETS[presetId];
   const [M, setM] = useState(deepCopy(preset.M));
   const [rows, setRows] = useState(preset.rows.slice());
@@ -220,8 +221,16 @@ function Level2({ onComplete }) {
         Подай в решётку матрицу совместных вероятностей <span className="mono">P(X, Y)</span>. Она вернёт
         H(X), H(Y), H(X,Y) и I(X;Y) в реальном времени. Чем больше I — тем плотнее связь — тем легче отследить.
       </p>
+      <StoryPanel cue="l2" />
 
-      <div className="row mt-6" style={{gap: 24, alignItems: 'flex-start'}}>
+      <div className="tabs mt-6">
+        <button className={`tab ${mode === 'breach' ? 'active' : ''}`} onClick={() => setMode('breach')}>I · Matrix Breach</button>
+        <button className={`tab ${mode === 'calc' ? 'active' : ''}`} onClick={() => setMode('calc')}>II · Live Calculator</button>
+      </div>
+
+      {mode === 'breach' && <MatrixBreachPuzzle gameState={gameState} gameActions={gameActions} />}
+
+      {mode === 'calc' && <div className="row mt-6" style={{gap: 24, alignItems: 'flex-start'}}>
         <div style={{flex: '1 1 540px', minWidth: 420}}>
           <div className="panel pink">
             <div className="panel-title">// матрица совместных вероятностей p(x, y) <div className="bar"/></div>
@@ -281,9 +290,9 @@ function Level2({ onComplete }) {
             </p>
           </div>
         </div>
-      </div>
+      </div>}
 
-      <div className="panel mt-6">
+      {mode === 'calc' && <div className="panel mt-6">
         <div className="panel-title">// формулы<div className="bar"/></div>
         <div className="row" style={{gap: 24, flexWrap: 'wrap'}}>
           <div className="mono" style={{fontSize: 13, color:'var(--neon-cyan)'}}>H(X) = −Σᵢ p(xᵢ) · log₂ p(xᵢ)</div>
@@ -291,13 +300,13 @@ function Level2({ onComplete }) {
           <div className="mono" style={{fontSize: 13, color:'var(--ink)'}}>H(X,Y) = −Σᵢⱼ p(xᵢ,yⱼ) · log₂ p(xᵢ,yⱼ)</div>
           <div className="mono" style={{fontSize: 13, color:'var(--neon-green)'}}>I(X;Y) = ΣᵢΣⱼ p(xᵢ,yⱼ) · log₂ ( p(xᵢ,yⱼ) / [p(xᵢ)·p(yⱼ)] )</div>
         </div>
-      </div>
+      </div>}
 
       <div className="row mt-6" style={{justifyContent:'space-between', borderTop:'1px solid rgba(5,217,255,0.12)', paddingTop: 24}}>
         <div className="mono dim" style={{fontSize: 11}}>
-          живой расчёт · нормализация по запросу · поддержка произвольных матриц
+          {gameState.accessFragments.includes('MUTUAL') ? 'Access Fragment cached :: MUTUAL' : 'Matrix Breach locked :: нужно пройти 3 stages'}
         </div>
-        <button className="btn pink" onClick={onComplete}>▸ отметить ОП-02 выполненным</button>
+        <button className="btn pink" onClick={onComplete} disabled={!gameState.accessFragments.includes('MUTUAL')}>▸ seal OP-02 checkpoint</button>
       </div>
     </div>
   );
