@@ -774,6 +774,35 @@ button, input, textarea, select {
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 14px;
 }
+.intel-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+}
+.intel-card {
+  border: 1px solid rgba(5,217,255,0.16);
+  background: rgba(0,0,0,0.22);
+  color: var(--ink);
+  padding: 12px;
+  text-align: left;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+.intel-card:hover {
+  border-color: rgba(5,217,255,0.45);
+  transform: translateY(-1px);
+}
+.intel-card.active {
+  border-color: rgba(57,255,122,0.55);
+  box-shadow: 0 0 20px rgba(57,255,122,0.12);
+}
+.intel-card small {
+  display: block;
+  margin-top: 10px;
+  color: var(--ink-dim);
+  font-size: 12px;
+  line-height: 1.4;
+}
 .choice-group {
   border: 1px solid rgba(5,217,255,0.16);
   background: rgba(0,0,0,0.18);
@@ -797,6 +826,13 @@ button, input, textarea, select {
   background: var(--neon-cyan);
   border-color: var(--neon-cyan);
   box-shadow: 0 0 18px rgba(5,217,255,0.25);
+}
+.choice-note {
+  min-height: 52px;
+  margin: 10px 0 0;
+  color: var(--ink-dim);
+  font-size: 12px;
+  line-height: 1.35;
 }
 .certificate {
   text-align: center;

@@ -49,7 +49,7 @@ function EDEVisualizer({ active, k1Hex, k2Hex, k3Hex, blocks }) {
 function Level3({ onComplete, gameState, gameActions }) {
   const [tab, setTab] = useState('assembly');
   const [plain, setPlain] = useState('узел горит в полночь. принеси чип.');
-  const [keyInput, setKeyInput] = useState('netrunner-v0id-shadow-key');
+  const [keyInput, setKeyInput] = useState('netrunner-johnny-shadow-key');
   const [iv, setIv] = useState('1337c0de');
   const [mode, setMode] = useState('CBC');
   const [cipherHex, setCipherHex] = useState('');
@@ -115,12 +115,15 @@ function Level3({ onComplete, gameState, gameActions }) {
 
   const swapKey = () => {
     setError('');
+    const wrongKey = new Uint8Array(keyBytes);
+    wrongKey[0] ^= 0xff;
     try {
-      const out = decryptText(cipherHex, keyInput + 'X', { mode, iv });
-      setDecoded(out);
+      decryptText(cipherHex, wrongKey, { mode, iv });
+      setDecoded('▒▒▒▒▒▒▒ повреждение :: неверный ключ ▒▒▒▒▒▒▒');
+      log('✗ использован изменённый ключ K1 — аутентичного открытого текста нет');
     } catch (e) {
       setDecoded('▒▒▒▒▒▒▒ повреждение :: неверный ключ ▒▒▒▒▒▒▒');
-      log(`✗ ключ не совпал — на выходе мусор (как и ожидалось)`);
+      log(`✗ неверный ключ разрушил padding/блоки :: ${e.message}`);
     }
   };
 
@@ -217,7 +220,8 @@ function Level3({ onComplete, gameState, gameActions }) {
       </div>
       <p className="body dim" style={{maxWidth: 760}}>
         Чистый JS-3DES (без крипто-библиотек). 64-битные блоки, PKCS#7-набивка, режимы ECB и CBC,
-        шифрование файлов и пошаговый показ расписания E-D-E.
+        шифрование файлов и пошаговый показ цепочки E-D-E. Сначала собери безопасный маршрут туннеля,
+        затем проверь его на тексте, файле и демонстрации перебора.
       </p>
       <StoryPanel cue="l3" />
 
@@ -268,7 +272,7 @@ function Level3({ onComplete, gameState, gameActions }) {
               <div className="row mt-4">
                 <button className="btn green" onClick={doEncrypt}>▸ зашифровать</button>
                 <button className="btn pink" onClick={doDecrypt} disabled={!cipherHex}>◂ дешифровать</button>
-                <button className="btn ghost" onClick={swapKey} disabled={!cipherHex}>попробовать неверный ключ</button>
+                <button className="btn ghost" onClick={swapKey} disabled={!cipherHex}>испортить ключ и проверить</button>
               </div>
               {error && <div className="chip" style={{borderColor:'var(--neon-red)', color:'var(--neon-red)', marginTop: 12}}>!! {error}</div>}
             </div>
