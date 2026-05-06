@@ -9,7 +9,7 @@
       title: 'Low Entropy Stealth',
       target: 'H(X) <= 0.70 бит',
       pass: (H) => H <= 0.70,
-      hint: 'Один исход должен почти всё забрать. Предсказуемый канал легче замаскировать под routine traffic.',
+      hint: 'Один исход должен забрать почти всю массу. Предсказуемый канал проще выдать за обычную служебную телеметрию.',
       preset: [0.90, 0.04, 0.03, 0.03],
     },
     {
@@ -17,7 +17,7 @@
       title: 'High Entropy Masking',
       target: 'H(X) >= 0.90 * Hmax',
       pass: (H, Hmax) => H >= 0.90 * Hmax,
-      hint: 'Равномерный хаос лучше прячет отдельный payload в шуме.',
+      hint: 'Равномерный шум лучше прячет отдельную полезную нагрузку.',
       preset: [0.25, 0.25, 0.25, 0.25],
     },
     {
@@ -86,7 +86,7 @@
           setProbs([0.25, 0.25, 0.25, 0.25]);
         }
       } else {
-        setMessage('Lock не открылся: распределение не попало в target condition.');
+        setMessage('Lock не открылся: распределение не попало в целевое условие.');
         gameActions.penalty({ heat: 20, trace: 15, integrity: hard ? 10 : 0, reason: `Entropy Lock mismatch :: ${task.title}` });
       }
     };
@@ -97,7 +97,7 @@
           <div className="panel-title">// Entropy Lock opened <div className="bar" /></div>
           <p className="body">
             Access Fragment <span className="mono" style={{ color: 'var(--neon-green)' }}>ENTROPY</span> cached.
-            Ты показал обе стороны энтропии: предсказуемость полезна для stealth-канала, максимум хаоса — для маскировки payload.
+            Ты показал обе стороны энтропии: предсказуемость полезна для скрытого канала, максимум хаоса — для маскировки полезной нагрузки.
           </p>
         </div>
       );

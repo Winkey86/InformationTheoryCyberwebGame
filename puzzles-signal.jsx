@@ -8,12 +8,12 @@
   }
 
   const signals = [
-    { id: 'routine', name: 'Routine ping', p: 0.85, interceptCost: 0.05, iceRisk: 0.05, note: 'Дешёвый heartbeat, но он почти ничего не меняет в модели.' },
-    { id: 'admin', name: 'Rare admin token leak', p: 0.04, interceptCost: 0.80, iceRisk: 0.55, best: true, note: 'Редкий, сильный, ещё не самоубийственный. Лучший breach-сигнал.' },
+    { id: 'routine', name: 'Routine ping', p: 0.85, interceptCost: 0.05, iceRisk: 0.05, note: 'Дешёвый heartbeat, но он почти не меняет модель.' },
+    { id: 'admin', name: 'Rare admin token leak', p: 0.04, interceptCost: 0.80, iceRisk: 0.55, best: true, note: 'Редкий, сильный и ещё не самоубийственный. Лучший сигнал для взлома.' },
     { id: 'sensor', name: 'Noisy sensor burst', p: 0.12, interceptCost: 1.20, iceRisk: 1.10, note: 'Информации много, но шумный перехват дорогой и заметный.' },
     { id: 'status', name: 'Predictable status packet', p: 0.92, interceptCost: 0.03, iceRisk: 0.03, note: 'Слишком предсказуемо. Почти мёртвый сигнал.' },
-    { id: 'burnice', name: 'BurnICE anomaly', p: 0.01, interceptCost: 1.40, iceRisk: 6.00, note: 'Очень редкий, но это наживка. ICE risk съедает всю ценность.' },
-    { id: 'login', name: 'User login pattern', p: 0.18, interceptCost: 0.35, iceRisk: 0.50, note: 'Неплохой рабочий след, но admin leak даёт больше utility.' },
+    { id: 'burnice', name: 'BurnICE anomaly', p: 0.01, interceptCost: 1.40, iceRisk: 6.00, note: 'Очень редкий, но это наживка. Риск ICE съедает всю ценность.' },
+    { id: 'login', name: 'User login pattern', p: 0.18, interceptCost: 0.35, iceRisk: 0.50, note: 'Неплохой рабочий след, но admin leak даёт больше полезности.' },
   ].map(s => ({ ...s, information: -Math.log2(s.p), utility: -Math.log2(s.p) - s.interceptCost - s.iceRisk }));
 
   function SignalValuePuzzle({ gameState, gameActions }) {
@@ -41,8 +41,8 @@
         <div className="panel">
           <div className="panel-title">// Signal Value Puzzle <div className="bar" /></div>
           <p className="body dim">
-            Выбери сигнал для netrun-операции. В лоб показываю вероятность, стоимость перехвата и ICE risk.
-            Итоговая utility вскроется после выбора: <span className="mono">utility = -log₂(p) - cost - risk</span>.
+            Выбери сигнал для netrun-операции. Сразу видны вероятность, стоимость перехвата и риск ICE.
+            Итоговая полезность откроется после выбора: <span className="mono">utility = -log₂(p) - cost - risk</span>.
           </p>
           <div className="cards-row mt-4">
             {signals.map(s => {
@@ -74,8 +74,8 @@
               <div className="panel-title">// debrief <div className="bar" /></div>
               <p className="body">
                 Редкий сигнал несёт больше информации, потому что сильнее снижает неопределённость.
-                Но в реальной ИТ-задаче мало знать <span className="mono">-log₂(p)</span>: логи, SOC-аналитика,
-                ML-фичи и security telemetry всегда платят ещё стоимостью сбора и риском засветиться.
+                Но в реальной ИТ-задаче одного <span className="mono">-log₂(p)</span> мало: логи, SOC-аналитика,
+                ML-фичи и защитная телеметрия всегда платят ещё стоимостью сбора и риском засветиться.
               </p>
             </div>
           )}

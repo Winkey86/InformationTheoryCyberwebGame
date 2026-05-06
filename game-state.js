@@ -4,7 +4,7 @@
 
 (function () {
   const STORE_KEY = 'netrunner.echo.v2.state';
-  const HERO_NAME = 'Rook';
+  const HERO_NAME = 'Johnny';
 
   const defaultCompleted = { menu: false, l1: false, l2: false, l3: false, finale: false };
   const defaultState = {
@@ -141,8 +141,8 @@
             next.flags = { ...next.flags, heat60: true };
             next.storyCue = 'heat60';
           }
-          const reason = payload.reason || 'bad click left a trace';
-          const suffix = hard && integrity > 0 ? ' :: hardline damage confirmed' : '';
+          const reason = payload.reason || 'ошибка оставила след';
+          const suffix = hard && integrity > 0 ? ' :: повреждение линии подтверждено' : '';
           return markDefeat(pushLog(next, `! ${reason} :: heat +${heat} trace +${trace} integrity -${integrity}${suffix}`, 'danger'), reason);
         });
       },
@@ -150,7 +150,7 @@
         update(prev => {
           if (prev.difficulty !== 'hard') return pushLog(prev, note || '> matrix normalized', 'info');
           const next = { ...prev, trace: clamp(prev.trace + 5, 0, 100) };
-          return markDefeat(pushLog(next, '! noisy recalibration :: Trace +5', 'warn'), 'Noisy recalibration exposed the matrix');
+          return markDefeat(pushLog(next, '! шумная перекалибровка :: Trace +5', 'warn'), 'шумная перекалибровка выдала матрицу');
         });
       },
       completeMission(id, checkpointLabel, checkpointScreen) {
@@ -209,18 +209,19 @@
           <div className="kicker">// boot complete · operator profile</div>
           <h1 className="title-lg mt-3"><span style={{ color: 'var(--neon-cyan)' }}>Select</span> Run Difficulty</h1>
           <p className="body dim">
-            Normal даёт больше подсказок и мягче штрафует. Hard режет запас по Integrity, ускоряет таймеры и делает Rollback злее.
+            Normal оставляет больше подсказок и мягче наказывает за ошибки. Hard снижает запас Integrity,
+            ускоряет таймеры и откатывает глубже при провале.
           </p>
           <div className="difficulty-grid mt-6">
             <button className="difficulty-card" onClick={() => gameActions.setDifficulty('normal')}>
               <span className="chip green">Recommended</span>
               <b>Normal</b>
-              <small>Подсказки включены · таймеры длиннее · ошибки терпимее.</small>
+              <small>Подсказки включены · таймеры длиннее · ошибки прощаются чаще.</small>
             </button>
             <button className="difficulty-card hard" onClick={() => gameActions.setDifficulty('hard')}>
               <span className="chip pink">Hard</span>
               <b>Hardline</b>
-              <small>Меньше намёков · выше Heat/Trace · финальная ошибка откатывает глубже.</small>
+              <small>Меньше намёков · выше Heat/Trace · финальная ошибка бьёт сильнее.</small>
             </button>
           </div>
         </div>
@@ -261,7 +262,7 @@
           <div className="kicker">BurnICE / terminal breach</div>
           <h1 className="title-xl glitch" data-text="ICE TRACE COMPLETE">ICE TRACE COMPLETE</h1>
           <p className="body">
-            Connection burned. {gameState.defeatReason || 'Trace замкнулся на физический канал.'}
+            Соединение сгорело. {gameState.defeatReason || 'Trace замкнулся на физический канал.'}
           </p>
           <div className="terminal mt-4">
             {gameState.terminalLog.slice(-10).map(e => `[${e.time}] ${e.text}`).join('\n')}
@@ -280,13 +281,13 @@
     if (!gameState.storyCue) return null;
     const cueMap = {
       boot: ['Focused', 'Лёд в ванной уже кусает кожу. Хорошо. Значит, линия держится.'],
-      firstError: ['Nervous', 'Ошибка — это не просто минус балл. В DeepGrid ошибка оставляет след.'],
-      heat60: ['Overheated', 'Trace растёт. Ещё один тупой клик — и BurnICE найдёт моё тело раньше, чем я найду Core.'],
-      rollback: ['Calm', `Rollback к checkpoint ${gameState.checkpoint}. Я уже видел этот коридор. Теперь он увидит меня.`],
-      missionComplete: ['Focused', 'Checkpoint sealed. Город делает вид, что ничего не произошло. Милый город.'],
-      success: ['Breach Mode', 'Access Fragment вошёл в кэш. KuroData прячет не данные, а связи между ними.'],
+      firstError: ['Nervous', 'Ошибка здесь не минус к счёту. В сетях ShenTech каждая ошибка оставляет след.'],
+      heat60: ['Overheated', 'Trace растёт. Ещё один неверный ход — и BurnICE найдёт моё тело раньше, чем я доберусь до Core.'],
+      rollback: ['Calm', `Откат к checkpoint ${gameState.checkpoint}. Этот коридор я уже видел. Теперь он увидит меня.`],
+      missionComplete: ['Focused', 'Checkpoint закрыт. Midnight City делает вид, что ничего не произошло. Хороший город.'],
+      success: ['Breach Mode', 'Access Fragment в кэше. ShenTech прячет не данные, а связи между ними.'],
       cipher: ['Breach Mode', 'CBC, random IV, EDE. Без этого ICE увидит паттерн и сожжёт туннель.'],
-      defeat: ['Overheated', 'Канал горит. Не геройствуй, Rook. Rollback — это тоже инструмент.'],
+      defeat: ['Overheated', 'Канал горит. Не геройствуй, Johnny. Rollback — это тоже инструмент.'],
     };
     const [status, text] = cueMap[gameState.storyCue] || cueMap.success;
     return (

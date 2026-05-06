@@ -48,7 +48,7 @@ function EDEVisualizer({ active, k1Hex, k2Hex, k3Hex, blocks }) {
 
 function Level3({ onComplete, gameState, gameActions }) {
   const [tab, setTab] = useState('assembly');
-  const [plain, setPlain] = useState('собор горит в полночь. принеси чип.');
+  const [plain, setPlain] = useState('узел горит в полночь. принеси чип.');
   const [keyInput, setKeyInput] = useState('netrunner-v0id-shadow-key');
   const [iv, setIv] = useState('1337c0de');
   const [mode, setMode] = useState('CBC');
@@ -195,7 +195,7 @@ function Level3({ onComplete, gameState, gameActions }) {
       heat += 0.4 + Math.random();
       setBruteHeat(Math.min(100, heat));
       if (heat >= 100) {
-        log('✗ нейрошунт перегрелся (100°C) — обрыв до того, как нетраннер прожарился.');
+        log('✗ нейрошунт перегрелся (100°C) — обрыв до того, как Johnny сгорит вместе с линией.');
         stopBrute();
       }
     }, 80);
@@ -224,7 +224,7 @@ function Level3({ onComplete, gameState, gameActions }) {
       <div className="tabs mt-6">
         <button className={`tab ${tab==='assembly'?'active':''}`} onClick={() => setTab('assembly')}>I · Cipher Tunnel</button>
         <button className={`tab ${tab==='main'?'active':''}`} onClick={() => setTab('main')}>II · Шифроядро</button>
-        <button className={`tab ${tab==='file'?'active':''}`} onClick={() => setTab('file')}>III · Сброс файла</button>
+        <button className={`tab ${tab==='file'?'active':''}`} onClick={() => setTab('file')}>III · Файлы</button>
         <button className={`tab ${tab==='brute'?'active':''}`} onClick={() => setTab('brute')}>IV · Перебор ключа</button>
       </div>
 
@@ -319,9 +319,9 @@ function Level3({ onComplete, gameState, gameActions }) {
       {tab === 'file' && (
         <div className="row" style={{gap: 24, alignItems:'flex-start'}}>
           <div className="panel" style={{flex:'1 1 420px'}}>
-            <div className="panel-title">// сброс файла<div className="bar"/></div>
+            <div className="panel-title">// работа с файлами<div className="bar"/></div>
             <p className="body dim" style={{fontSize: 13}}>
-              Подкинь любой файл. Он читается как сырые байты, добивается PKCS#7 и проходит через
+              Загрузи любой файл. Он читается как сырые байты, дополняется PKCS#7 и проходит через
               ту же EDE-цепочку. Для обратной операции загрузи .3des с тем же ключом, режимом и IV.
             </p>
             <div className="mt-3">
@@ -357,7 +357,7 @@ function Level3({ onComplete, gameState, gameActions }) {
             </div>
           </div>
           <div className="panel pink" style={{flex:'1 1 420px'}}>
-            <div className="panel-title">// сырой шифротекст (обрезано)<div className="bar"/></div>
+            <div className="panel-title">// фрагмент шифротекста<div className="bar"/></div>
             <div className="mono" style={{
               background:'rgba(0,0,0,0.5)', padding: 12,
               maxHeight: 280, overflow: 'auto',
@@ -372,11 +372,11 @@ function Level3({ onComplete, gameState, gameActions }) {
 
       {tab === 'brute' && (
         <div className="panel" style={{maxWidth: 920}}>
-          <div className="panel-title">// театр перебора · в реале не пытайся<div className="bar"/></div>
+          <div className="panel-title">// демонстрация перебора · в реальности не пытайся<div className="bar"/></div>
           <p className="body" style={{fontSize: 14}}>
-            Ради смеха. Подбираем случайные 24-байтовые ключи к текущему шифротексту и смотрим, как
+            Демонстрация масштаба. Подбираем случайные 24-байтовые ключи к текущему шифротексту и смотрим, как
             греется нейрошунт. У настоящего 3DES ≈2¹⁶⁸ ключей; meet-in-the-middle сбивает фактическую
-            стойкость до ≈2¹¹². В любом случае ты и нетраннер прогорите <b>задолго</b> до попадания.
+            стойкость до ≈2¹¹². В любом случае Johnny и линия сгорят <b>задолго</b> до попадания.
           </p>
           <div className="row mt-4">
             {!bruteRunning

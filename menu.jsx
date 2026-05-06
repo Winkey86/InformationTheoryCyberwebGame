@@ -5,11 +5,11 @@
 function MainMenu({ setScreen, completed, gameState, gameActions }) {
   const ops = [
     { id: 'l1', code: 'ОП-01', name: 'Колыбель Шеннона', sub: 'Количество информации', color: 'cyan',
-      brief: 'Signal Value и Entropy Lock. Учись выбирать биты, которые реально режут неизвестность, а не просто шумят.'},
+      brief: 'Signal Value и Entropy Lock. Учись выбирать сигналы, которые действительно уменьшают неопределённость, а не просто шумят.'},
     { id: 'l2', code: 'ОП-02', name: 'Решётка взаимности', sub: 'Анализ совместных вероятностей', color: 'pink',
-      brief: 'Matrix Breach поверх live-калькулятора. Собери P(X,Y), где связь сильная, но не палится слишком очевидно.'},
+      brief: 'Matrix Breach и живой калькулятор. Собери P(X,Y), где связь достаточно сильна, но не бросается в глаза защитному контуру.'},
     { id: 'l3', code: 'ОП-03', name: 'Лом Чёрного Льда', sub: '3DES — шифрование / дешифрование / взлом', color: 'green',
-      brief: 'Cipher Tunnel Assembly, а рядом старое шифроядро: EDE, CBC, IV, файлы и brute-force demo.'},
+      brief: 'Cipher Tunnel Assembly и шифроядро 3DES: EDE, CBC, IV, файлы и демонстрация перебора.'},
   ];
   return (
     <div className="fade-in" style={{padding: '40px 64px 64px', maxWidth: 1280, margin: '0 auto'}}>
@@ -20,9 +20,9 @@ function MainMenu({ setScreen, completed, gameState, gameActions }) {
         <span style={{color:'var(--neon-pink)', textShadow:'0 0 24px rgba(255,42,109,0.6)'}}>ИНФОРМАЦИИ</span>
       </h1>
       <div className="row fade-in d2" style={{marginTop: 12, marginBottom: 28}}>
-        <span className="chip">НЕТРАННЕР · {window.HERO_NAME || 'Rook'}</span>
-        <span className="chip pink">ЦЕЛЬ · KRONOS SYSCORP</span>
-        <span className="chip green">ГОРОД · НЕОН-ХАРБОР</span>
+        <span className="chip">НЕТРАННЕР · {window.HERO_NAME || 'Johnny'}</span>
+        <span className="chip pink">ЦЕЛЬ · SHENTECH</span>
+        <span className="chip green">ГОРОД · MIDNIGHT CITY</span>
         <span className="chip warn">DIFFICULTY · {gameState.difficulty.toUpperCase()}</span>
       </div>
       <StoryPanel cue="boot" />
@@ -31,13 +31,13 @@ function MainMenu({ setScreen, completed, gameState, gameActions }) {
         <span className="br-tr" /><span className="br-bl" />
         <div className="panel-title">// перехват трансляции <div className="bar" /></div>
         <p className="body" style={{margin:0}}>
-          Они построили скайлайн из чужих секретов. Каждый билборд, каждый чёрнорыночный киоск,
-          каждая костно-проводная реклама — это всего лишь утёкшая энтропия со спиленными серийниками.
-          Сегодня ты ныряешь под кожу города, чтобы добыть <b style={{color:'var(--neon-cyan)'}}>Ключ Информации</b>{' '}
-          — алгоритм, который решает, каким битам быть громкими.
+          Корпорация ShenTech построила скайлайн из чужих секретов. Каждый билборд, каждый чёрнорыночный киоск,
+          каждая костно-проводная реклама в Midnight City питается украденными данными.
+          Сегодня Johnny уходит под кожу города, чтобы добыть <b style={{color:'var(--neon-cyan)'}}>Ключ Информации</b>{' '}
+          — алгоритм, который решает, какие биты станут видимыми.
         </p>
         <p className="body mono dim" style={{margin: '14px 0 0', fontSize: 12, letterSpacing: '0.05em'}}>
-          три операции. три замка. один нетраннер.
+          три операции. три замка. один позывной.
         </p>
       </div>
 
@@ -84,7 +84,7 @@ function Finale({ completed, setScreen, gameState, gameActions }) {
           <div className="panel" style={{maxWidth: 720}}>
             <div className="panel-title">// статус <div className="bar"/></div>
             <p className="body">
-            Три операции должны быть sealed как checkpoints. Но Core также смотрит на Access Fragments: BIT, ENTROPY, MUTUAL, CIPHER.
+            Нужно закрыть три операции как checkpoints. Core также проверяет Access Fragments: BIT, ENTROPY, MUTUAL, CIPHER.
           </p>
           <ul className="body mono" style={{fontSize: 13, lineHeight: 2, listStyle: 'none', padding: 0}}>
             <li>{completed.l1 ? '✓ ' : '☐ '} ОП-01 :: Колыбель Шеннона</li>

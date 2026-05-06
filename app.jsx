@@ -29,11 +29,11 @@ function App() {
 
   const levelOf = screen === 'l1' ? 1 : screen === 'l2' ? 2 : screen === 'l3' ? 3 : screen === 'finale' ? 4 : 0;
   const statusBlurb = (
-    screen === 'menu'   ? 'dossier открыт :: выбери node' :
+    screen === 'menu'   ? 'досье открыто :: выбери узел' :
     screen === 'l1'     ? 'OP-01 :: signal value / entropy lock' :
     screen === 'l2'     ? 'OP-02 :: matrix breach' :
     screen === 'l3'     ? 'OP-03 :: cipher tunnel' :
-                          'OBSIDIAN CORE :: final breach'
+                          'OBSIDIAN CORE :: финальный взлом'
   );
 
   if (!booted) {

@@ -6,7 +6,7 @@
   const PHRASES = {
     boot: {
       status: 'Focused',
-      text: 'Информация — это не шум. Это момент, когда туман в голове становится картой.',
+      text: 'Информация — не шум. Это момент, когда туман в голове превращается в карту.',
     },
     l1: {
       status: 'Calm',
@@ -14,15 +14,15 @@
     },
     signal: {
       status: 'Focused',
-      text: 'Редкость сама по себе не билет внутрь. Ценный сигнал ещё должен пережить стоимость перехвата и ICE risk.',
+      text: 'Редкость сама по себе не открывает дверь. Ценный сигнал должен окупить перехват и не сжечь маршрут.',
     },
     entropy: {
       status: 'Nervous',
-      text: 'Канал можно спрятать двумя способами: сделать его скучным как heartbeat или шумным как дождь на стекле.',
+      text: 'Канал можно спрятать двумя способами: сделать его скучным, как пульс телеметрии, или шумным, как дождь по стеклу.',
     },
     l2: {
       status: 'Focused',
-      text: 'KuroData не прячет данные. Они прячут связи между ними.',
+      text: 'ShenTech не прячет данные. Они прячут связи между ними.',
     },
     l3: {
       status: 'Breach Mode',
@@ -30,11 +30,11 @@
     },
     final: {
       status: 'Overheated',
-      text: 'BurnICE почти на физическом канале. Один заход. Четыре замка. Потом Core или темнота.',
+      text: 'BurnICE почти вышел на физический канал. Один заход. Четыре замка. Потом Core или темнота.',
     },
     win: {
       status: 'Calm',
-      text: 'Сигнал прошёл. Иногда город молчит не потому, что пустой, а потому что наконец понял.',
+      text: 'Сигнал прошёл. Иногда Midnight City молчит не потому, что пуст, а потому что наконец понял.',
     },
   };
 
@@ -44,7 +44,7 @@
     return (
       <div className={`hero-portrait ${compact ? 'compact' : ''}`}>
         {ok ? (
-          <img src={src} alt="Rook portrait" onError={() => setOk(false)} />
+          <img src={src} alt="Johnny portrait" onError={() => setOk(false)} />
         ) : (
           <div className="portrait-fallback" aria-label="portrait placeholder">
             <span className="portrait-head" />
@@ -66,7 +66,7 @@
         <Portrait compact={compact} />
         <div className="story-copy">
           <div className="row" style={{ justifyContent: 'space-between', gap: 10 }}>
-            <span className="kicker">{window.HERO_NAME || 'Rook'} // Hero Monologue</span>
+            <span className="kicker">{window.HERO_NAME || 'Johnny'} // монолог</span>
             <span className={`chip ${resolvedStatus === 'Overheated' || resolvedStatus === 'Nervous' ? 'pink' : resolvedStatus === 'Breach Mode' ? 'green' : ''}`}>
               {resolvedStatus}
             </span>

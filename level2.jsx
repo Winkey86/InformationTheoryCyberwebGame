@@ -23,8 +23,8 @@ const PRESETS = {
     M: [[0.4, 0.1],[0.15, 0.35]],
   },
   surveillance: {
-    label: 'СЕТКА KRONOS · 4×4',
-    note: 'Сетка камер vs движение горожан. Перевес по диагонали — значит, тебя могут отследить.',
+    label: 'СЕТКА SHENTECH · 4×4',
+    note: 'Сетка камер против маршрутов горожан. Диагональный перевес означает, что перемещение можно связать с наблюдением.',
     rows: ['кам_a','кам_b','кам_c','кам_d'], cols: ['зона₁','зона₂','зона₃','зона₄'],
     M: [
       [0.12, 0.04, 0.02, 0.01],
@@ -202,24 +202,24 @@ function Level2({ onComplete, gameState, gameActions }) {
 
   const stats = useMemo(() => window.InfoTheory.mutualInformation(M), [M]);
   const verdict = (() => {
-    if (stats.NMI > 0.7) return { txt: 'СИСТЕМЫ ПЕРЕПЛЕТЕНЫ · X ПРЕДСКАЗЫВАЕТ Y', cls: 'pink' };
+    if (stats.NMI > 0.7) return { txt: 'СИСТЕМЫ СИЛЬНО СВЯЗАНЫ · X ПРЕДСКАЗЫВАЕТ Y', cls: 'pink' };
     if (stats.NMI > 0.3) return { txt: 'ЗАМЕТНАЯ СВЯЗЬ · ОТСЛЕЖИВАЕМО',           cls: 'warn' };
     if (stats.NMI > 0.05) return { txt: 'СЛАБАЯ ЗАВИСИМОСТЬ',                       cls: '' };
-    return { txt: 'ПО СУТИ НЕЗАВИСИМЫ', cls: 'green' };
+    return { txt: 'ПРАКТИЧЕСКИ НЕЗАВИСИМЫ', cls: 'green' };
   })();
 
   return (
     <div className="fade-in" style={{padding: '32px 64px 64px', maxWidth: 1280, margin: '0 auto'}}>
       <div className="row mb-2" style={{justifyContent:'space-between'}}>
         <div>
-          <div className="kicker">ОП-02 · ДАТА-ЭТАЖ</div>
+          <div className="kicker">ОП-02 · ДАТА-ЯРУС</div>
           <h1 className="title-lg" style={{color:'var(--neon-pink)', marginTop: 8}}>РЕШЁТКА ВЗАИМНОСТИ</h1>
         </div>
         <span className="chip pink">ПОЛНАЯ ВЗАИМНАЯ ИНФОРМАЦИЯ</span>
       </div>
       <p className="body dim" style={{maxWidth: 760}}>
-        Подай в решётку матрицу совместных вероятностей <span className="mono">P(X, Y)</span>. Она вернёт
-        H(X), H(Y), H(X,Y) и I(X;Y) в реальном времени. Чем больше I — тем плотнее связь — тем легче отследить.
+        Загрузи в решётку матрицу совместных вероятностей <span className="mono">P(X, Y)</span>. Она посчитает
+        H(X), H(Y), H(X,Y) и I(X;Y) в реальном времени. Чем больше I, тем плотнее связь и тем проще отследить маршрут.
       </p>
       <StoryPanel cue="l2" />
 

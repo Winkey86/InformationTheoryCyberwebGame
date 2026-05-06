@@ -20,11 +20,11 @@
   };
 
   const reasons = {
-    mode: 'ECB: Repeating blocks detected. ICE sees the pattern.',
-    iv: 'CBC needs an IV. Fixed or missing IV leaves a trace.',
-    pipeline: 'This is not Triple DES EDE. Receiver cannot decode payload.',
-    padding: 'Payload length is not aligned to 8-byte DES block without PKCS#7.',
-    keyProfile: 'Weak key profile collapses the tunnel. K1=K2=K3 drifts toward single DES behavior.',
+    mode: 'ECB раскрывает повторяющиеся блоки. ICE увидит паттерн.',
+    iv: 'CBC нужен IV. Фиксированный или отсутствующий IV оставляет след.',
+    pipeline: 'Это не Triple DES EDE. Приёмник не сможет расшифровать полезную нагрузку.',
+    padding: 'Без PKCS#7 длина полезной нагрузки не выравнивается по 8-байтовому блоку DES.',
+    keyProfile: 'Слабый ключ рушит туннель. При K1=K2=K3 схема фактически откатывается к обычному DES.',
   };
 
   function randomHex(bytes) {
@@ -62,7 +62,7 @@
       setResult({ plaintext, iv, key, ciphertext, decrypted });
       setError('');
       gameActions.awardFragment('CIPHER', 'cipher tunnel assembled');
-      gameActions.addLog(`✓ payload encrypted :: ${ciphertext.slice(0, 28)}...`, 'success');
+      gameActions.addLog(`✓ полезная нагрузка зашифрована :: ${ciphertext.slice(0, 28)}...`, 'success');
     };
 
     return (
@@ -71,8 +71,8 @@
         <div className="panel">
           <div className="panel-title">// Cipher Tunnel Assembly <div className="bar" /></div>
           <p className="body dim">
-            Собери протокол для отправки payload в Core. Здесь не надо переписывать 3DES: нужно выбрать параметры,
-            которые не палят паттерны и совместимы с EDE-пайплайном.
+            Собери протокол для отправки полезной нагрузки в Core. Здесь не нужно переписывать 3DES: нужно выбрать параметры,
+            которые не выдают паттерны и совместимы с EDE-пайплайном.
           </p>
           <div className="choice-grid mt-4">
             {Object.entries(options).map(([group, vals]) => (
@@ -92,7 +92,7 @@
           </div>
           {result && (
             <div className="panel pink mt-4">
-              <div className="panel-title">// payload test <div className="bar" /></div>
+              <div className="panel-title">// проверка полезной нагрузки <div className="bar" /></div>
               <div className="terminal">
                 {[
                   `plaintext  :: ${result.plaintext}`,

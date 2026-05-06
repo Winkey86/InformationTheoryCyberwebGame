@@ -94,9 +94,9 @@ function HudMeter({ label, value, color, invert }) {
 function StatusBar({ children }) {
   return (
     <div className="statusbar">
-      <div className="seg">НЕТРАННЕР · <b>V0ID</b></div>
+      <div className="seg">НЕТРАННЕР · <b>Johnny</b></div>
       <div className="seg">{children}</div>
-      <div className="seg">ОБЩАЯ СЕТЬ / KRONOS SYSCORP / УРОВЕНЬ-Δ</div>
+      <div className="seg">ОБЩАЯ СЕТЬ / SHENTECH / MIDNIGHT CITY / УРОВЕНЬ-Δ</div>
     </div>
   );
 }
@@ -137,10 +137,10 @@ function NavRail({ screen, setScreen, completed, gameState }) {
 function BootSequence({ onDone }) {
   const lines = [
     '> инициализация нейрошунта ................. [ok]',
-    '> рукопожатие :: KRONOS SYSCORP / УРОВЕНЬ-Δ. [ok]',
+    '> рукопожатие :: SHENTECH / MIDNIGHT CITY / УРОВЕНЬ-Δ. [ok]',
     '> зондирование ICE-решётки 7Е-22/0xAA01 .... [ok]',
     '> калибровка резервуара энтропии ........... [ok]',
-    '> загрузка профиля нетраннера :: V0ID ...... [ok]',
+    '> загрузка профиля нетраннера :: Johnny .... [ok]',
     '> монтирование модулей: SHANNON, MUTUAL, 3DES [ok]',
     '> обход телеметрии Black ICE ............... [скрыто]',
     '> ГОТОВ.',
@@ -171,7 +171,7 @@ function BootSequence({ onDone }) {
       <pre style={{color: 'var(--neon-cyan)', marginBottom: 12}}>
 {`╔══════════════════════════════════════════════════════════╗
 ║   Н Е Т Р А Н Н Е Р   ::   Э Х О   И Н Ф О Р М А Ц И И   ║
-║   v0.9.7 — сборка neon harbor — только для операторов     ║
+║   v0.9.7 — сборка midnight city — только для операторов    ║
 ╚══════════════════════════════════════════════════════════╝`}
       </pre>
       {lines.slice(0, shown).map((l, i) => <pre key={i}>{l}</pre>)}

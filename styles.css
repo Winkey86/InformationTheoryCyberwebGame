@@ -738,13 +738,25 @@ button, input, textarea, select {
 .condition-list { display: grid; gap: 8px; }
 .condition-row {
   display: flex;
-  justify-content: space-between;
+  align-items: flex-start;
   gap: 12px;
   padding: 9px 10px;
   border: 1px solid rgba(231,238,247,0.12);
   background: rgba(0,0,0,0.22);
   font-family: var(--mono);
   font-size: 11px;
+}
+.condition-row > div {
+  display: grid;
+  gap: 4px;
+  flex: 1;
+}
+.condition-row b { color: var(--ink); }
+.condition-row small {
+  color: var(--ink-dim);
+  font-family: var(--font);
+  font-size: 12px;
+  line-height: 1.35;
 }
 .condition-row span { color: var(--neon-red); }
 .condition-row.pass { border-color: rgba(57,255,122,0.35); }

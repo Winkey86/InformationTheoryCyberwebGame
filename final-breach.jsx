@@ -21,7 +21,7 @@
       return (
         <div className="panel" style={{ maxWidth: 820 }}>
           <div className="panel-title">// Obsidian Core locked <div className="bar" /></div>
-          <p className="body">Core не принимает неполный keyring. Нужны Access Fragments:</p>
+          <p className="body">Core не принимает неполный набор ключей. Нужны Access Fragments:</p>
           <div className="row">
             {required.map(f => <span key={f} className={`chip ${missing.includes(f) ? 'pink' : 'green'}`}>{missing.includes(f) ? 'missing' : 'cached'} {f}</span>)}
           </div>
@@ -66,7 +66,7 @@
     const steps = [
       {
         title: '1 / pick the signal',
-        line: 'Rook: один сигнал, который стоит шума. BurnICE уже нюхает воду.',
+        line: 'Johnny: нужен один сигнал, который стоит шума. BurnICE уже ищет источник.',
         body: (
           <div className="cards-row">
             {[
@@ -76,7 +76,7 @@
             ].map(([label, ok]) => (
               <button key={label} className="signal-card" onClick={() => ok ? pass('signal value') : fail(`final signal mismatch :: ${label}`)}>
                 <div className="title-md" style={{ color: 'var(--neon-cyan)' }}>{label}</div>
-                <p className="body dim" style={{ fontSize: 13 }}>{ok ? 'Низкая p, разумный risk, высокая utility.' : 'Либо слишком скучно, либо слишком горячо.'}</p>
+                <p className="body dim" style={{ fontSize: 13 }}>{ok ? 'Низкая p, разумный риск, высокая полезность.' : 'Либо слишком скучно, либо слишком горячо.'}</p>
               </button>
             ))}
           </div>
@@ -84,7 +84,7 @@
       },
       {
         title: '2 / tune entropy channel',
-        line: 'Rook: канал должен звучать как дождь, но не как сирена.',
+        line: 'Johnny: канал должен звучать как дождь, а не как сирена.',
         body: (
           <div className="cards-row">
             {[
@@ -102,7 +102,7 @@
       },
       {
         title: '3 / mini matrix breach',
-        line: 'Rook: X должен шепнуть Y достаточно, чтобы дверь узнала нас, но не достаточно, чтобы SOC проснулся.',
+        line: 'Johnny: X должен сказать Y достаточно, чтобы дверь узнала нас, но не настолько много, чтобы проснулся SOC.',
         body: (
           <div className="cards-row">
             {[
@@ -120,7 +120,7 @@
       },
       {
         title: '4 / assemble and send payload',
-        line: 'Rook: CBC. Random IV. EDE. PKCS#7. Сейчас или никогда.',
+        line: 'Johnny: CBC. Random IV. EDE. PKCS#7. Сейчас или никогда.',
         body: (
           <div className="cards-row">
             {[
@@ -168,7 +168,7 @@
             <div className="kicker">DesignTest / НЕТРАННЕР - Эхо Информации</div>
             <h1 className="title-lg" style={{ color: 'var(--neon-green)' }}>BREACH COMPLETE</h1>
             <p className="body">
-              Оператор {window.HERO_NAME || 'Rook'} закрыл три задания БДЗ и прошёл Obsidian Core.
+              Оператор {window.HERO_NAME || 'Johnny'} закрыл три задания БДЗ и прошёл Obsidian Core.
             </p>
             <div className="cert-grid">
               <div><b>Количество информации</b><span>Информация — не размер сообщения, а мера того, насколько сигнал уменьшает неопределённость.</span></div>
