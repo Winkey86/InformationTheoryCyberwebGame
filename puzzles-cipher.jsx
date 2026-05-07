@@ -123,10 +123,11 @@
     });
     const [result, setResult] = React.useState(null);
     const [error, setError] = React.useState('');
-    const appliedIntel = intel.filter(item => choice[item.group] === item.value).length;
+    const appliedIntel = hard ? 0 : intel.filter(item => choice[item.group] === item.value).length;
 
     const set = (group, value) => setChoice(c => ({ ...c, [group]: value }));
     const applyIntel = (item) => {
+      if (hard) return;
       set(item.group, item.value);
       setError('');
     };
@@ -154,17 +155,19 @@
         <div className="panel">
           <div className="panel-title">// Cipher Tunnel Assembly <div className="bar" /></div>
           <p className="body dim">
-            Собери маршрут из источников ниже. Каждый источник указывает на один параметр туннеля:
-            режим, IV, цепочку 3DES, padding или профиль ключа. Когда все подсказки применены,
-            проверь сборку.
+            {hard
+              ? 'Собери маршрут вручную. Источники дают только контекст, но не подставляют параметры туннеля.'
+              : 'Собери маршрут из источников ниже. Каждый источник указывает на один параметр туннеля: режим, IV, цепочку 3DES, padding или профиль ключа. Когда все подсказки применены, проверь сборку.'}
           </p>
           <div className="row mt-3" style={{ justifyContent: 'space-between' }}>
-            <span className="chip green">источники применены · {appliedIntel}/{intel.length}</span>
-            <span className="mono dim" style={{ fontSize: 11 }}>маршрут: CBC / random IV / EDE / PKCS#7 / 24-byte key</span>
+            {!hard && <span className="chip green">источники применены · {appliedIntel}/{intel.length}</span>}
+            {hard
+              ? <span className="chip pink">hardline · ручная сборка</span>
+              : <span className="mono dim" style={{ fontSize: 11 }}>маршрут: CBC / random IV / EDE / PKCS#7 / 24-byte key</span>}
           </div>
           <div className="intel-grid mt-4">
             {intel.map(item => {
-              const active = choice[item.group] === item.value;
+              const active = !hard && choice[item.group] === item.value;
               return (
                 <button key={item.id} className={`intel-card ${active ? 'active' : ''}`} onClick={() => applyIntel(item)}>
                   <div className="row" style={{ justifyContent: 'space-between' }}>
@@ -172,10 +175,14 @@
                     <span className={`chip ${active ? 'green' : ''}`}>{labels[item.group]}</span>
                   </div>
                   <p className="body dim">{item.clue}</p>
-                  <div className="mono" style={{ color: active ? 'var(--neon-green)' : 'var(--neon-yellow)', fontSize: 11 }}>
-                    выбрать :: {item.value}
-                  </div>
-                  <small>{item.why}</small>
+                  {!hard && (
+                    <>
+                      <div className="mono" style={{ color: active ? 'var(--neon-green)' : 'var(--neon-yellow)', fontSize: 11 }}>
+                        выбрать :: {item.value}
+                      </div>
+                      <small>{item.why}</small>
+                    </>
+                  )}
                 </button>
               );
             })}
@@ -189,7 +196,7 @@
                     {v}
                   </button>
                 ))}
-                <p className="choice-note">{optionNotes[group][choice[group]]}</p>
+                {!hard && <p className="choice-note">{optionNotes[group][choice[group]]}</p>}
               </div>
             ))}
           </div>
